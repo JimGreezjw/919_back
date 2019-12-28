@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.project.dao.BillsMapper">
+  <resultMap id="BaseResultMap" type="com.company.project.model.Bills">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="create_date" jdbcType="DATE" property="createDate"/>
+    <result column="type_id" jdbcType="INTEGER" property="typeId"/>
+    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+  </resultMap>
+  <select id="findByUserId" resultMap="BaseResultMap">
+        select * from bills where user_id=#{userId}
+    </select>
+  <select id="findByTypesId" resultMap="BaseResultMap">
+    select b.* from bills b where 1=1
+    <if test="typeId !=null and typeId !=''">
+      AND b.type_id=#{typeId}
+    </if>
+    <if test="year !=null and year !=''">
+      <![CDATA[  and DATE_FORMAT(b.create_date, '%Y') = #{year} ]]>
+    </if>
+  </select>
+</mapper>
