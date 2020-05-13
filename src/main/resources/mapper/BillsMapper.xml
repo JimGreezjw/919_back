@@ -5,11 +5,15 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" jdbcType="INTEGER" property="id"/>
-    <result column="name" jdbcType="VARCHAR" property="name"/>
-    <result column="create_date" jdbcType="DATE" property="createDate"/>
-    <result column="type_id" jdbcType="INTEGER" property="typeId"/>
-    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="bill_status" jdbcType="INTEGER" property="billStatus" />
+    <result column="bak" jdbcType="VARCHAR" property="bak" />
+    <result column="reason" jdbcType="LONGVARCHAR" property="reason" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
   <select id="findByUserId" resultMap="BaseResultMap">
         select * from bills where user_id=#{userId}

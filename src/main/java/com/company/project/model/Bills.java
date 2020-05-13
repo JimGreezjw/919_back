@@ -19,6 +19,15 @@ public class Bills {
     @Column(name = "user_id")
     private Integer userId;
 
+    @Column(name = "bill_status")
+    private Integer billStatus;
+
+    private String bak;
+
+    private String reason;
+
+    private String content;
+
     /**
      * @return id
      */
@@ -87,5 +96,61 @@ public class Bills {
      */
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    /**
+     * @return bills_tatus
+     */
+    public Integer getBillStatus() {
+        return billStatus;
+    }
+
+    /**
+     * @param billStatus
+     */
+    public void setBillStatus(Integer billStatus) {
+        this.billStatus = billStatus;
+    }
+
+    /**
+     * @return bak
+     */
+    public String getBak() {
+        return bak;
+    }
+
+    /**
+     * @param bak
+     */
+    public void setBak(String bak) {
+        this.bak = bak;
+    }
+
+    /**
+     * @return reason
+     */
+    public String getReason() {
+        return reason;
+    }
+
+    /**
+     * @param reason
+     */
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    /**
+     * @return content
+     */
+    public String getContent() {
+        return content;
+    }
+
+    /**
+     * @param content
+     */
+    public void setContent(String content) {
+        this.content = content;
     }
 }

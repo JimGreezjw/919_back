@@ -11,12 +11,7 @@ import org.springframework.web.filter.CorsFilter;
 public class CorsConfig {
   private CorsConfiguration buildConfig() {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
-    corsConfiguration.setAllowCredentials(true);
-    // 设置setAllowCredentials = true后就不能设置为*了，要设置具体的
-    corsConfiguration.addAllowedOrigin("http://192.168.161.6:9528");
-    corsConfiguration.addAllowedOrigin("http://localhost:9528");
-    corsConfiguration.addAllowedOrigin("http://127.0.0.1:9528");
-
+    corsConfiguration.addAllowedOrigin("*"); // 1允许任何域名使用
     corsConfiguration.addAllowedHeader("*"); // 2
     corsConfiguration.addAllowedMethod("*"); // 3
     return corsConfiguration;

@@ -45,14 +45,15 @@ public class WebSecurityConfig extends WebMvcConfigurerAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
       throws Exception {
       response.setHeader("Access-Control-Allow-Origin", "http://localhost:9528");
-      HttpSession session = request.getSession();
-      if (session.getAttribute(SESSION_KEY) != null)
-        return true;
-
-      // 跳转登录
-      String url = "login";
-      response.sendRedirect(url);
-      return false;
+//      HttpSession session = request.getSession();
+//      if (session.getAttribute(SESSION_KEY) != null)
+//        return true;
+//
+//      // 跳转登录
+//      String url = "login";
+//      response.sendRedirect(url);
+//      return false;
+      return true;
     }
   }
 }

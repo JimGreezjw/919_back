@@ -37,20 +37,20 @@ public class LoginController {
         String token = String.valueOf(System.currentTimeMillis());
         res_json.put("token", token);
         res_json.put("userId", user.getId());
+        res_json.put("userName", user.getUsername());
         session.setAttribute(WebSecurityConfig.SESSION_KEY, user.getUsername());
         session.setAttribute("token",token);
       } else {
         res_json.put("msg", "登陆失败！");
-        return ResultGenerator.genSuccessResult(res_json);
+        return ResultGenerator.genFailResult("登陆失败！");
       }
     } else {
       res_json.put("msg", "登陆失败！");
-      return ResultGenerator.genSuccessResult(res_json);
+      return ResultGenerator.genFailResult("登陆失败！");
     }
     return ResultGenerator.genSuccessResult(res_json);
   }
 
-  @CrossOrigin(origins = "http://localhost:9528", maxAge = 3600,allowCredentials = "true")
   @PostMapping("/logout")
   public Result logout(HttpSession session) {
     // 移除session

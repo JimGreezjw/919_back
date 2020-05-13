@@ -43,6 +43,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
 
   private final Logger logger = LoggerFactory.getLogger(WebMvcConfigurer.class);
+
   @Value("${spring.profiles.active}")
   private String env;//当前激活的配置文件
 
@@ -101,7 +102,11 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
   //解决跨域问题
   @Override
   public void addCorsMappings(CorsRegistry registry) {
-//    registry.addMapping("/user/*").allowedOrigins("http://localhost:9528");
+    registry.addMapping("/**")
+      .allowedOrigins("*")
+      .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
+      .maxAge(3600)
+      .allowCredentials(true);
 
   }
 

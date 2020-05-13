@@ -12,7 +12,7 @@ import java.util.List;
 
 
 /**
- * Created by CodeGenerator on 2019/12/16.
+ * Created by CodeGenerator on 2019/12/31.
  */
 @Service
 @Transactional
@@ -31,4 +31,5 @@ public class BillsServiceImpl extends AbstractService<Bills> implements BillsSer
     List<Bills> billsList=billsMapper.findByTypesId(typeId,year);
     return billsList;
   }
+
 }

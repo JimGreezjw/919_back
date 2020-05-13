@@ -11,16 +11,16 @@ import com.company.project.utils.SdUtils;
 import com.company.project.vo.BillsVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by CodeGenerator on 2019/12/16.
+ * Created by CodeGenerator on 2019/12/31.
  */
 @RestController
 @RequestMapping("/bills")
@@ -32,15 +32,15 @@ public class BillsController {
   private UserService userService;
 
   @PostMapping("/add")
-  public Result add(@RequestBody String jsonstr) {
+  public Result add(@RequestBody String jsonstr, HttpSession session) {
     Bills bills=new Bills();
     JSONObject json = JSONObject.parseObject(jsonstr);
     String typesName="";
 
     if (json.containsKey("typeId")) {
       int typeId=json.getInteger("typeId");
-      List<Bills> billsList=billsService.getBillsByTypes(typeId,SdUtils.getYear());
-      typesName=BillsNameGen.genBillsName(typeId,billsList.size());
+      List<Bills> billsList=billsService.getBillsByTypes(typeId, SdUtils.getYear());
+      typesName= BillsNameGen.genBillsName(typeId,billsList.size());
       bills.setTypeId(typeId);
       bills.setName(typesName);
     }else{
@@ -50,6 +50,18 @@ public class BillsController {
       bills.setUserId(json.getInteger("userId"));
     }else{
       return ResultGenerator.genFailResult("请输入要号用户");
+    }
+    if(json.containsKey("content")){
+      bills.setContent(json.getString("content"));
+    }
+    if(json.containsKey("filepath")){
+      bills.setBak(json.getString("filepath"));
+    }
+    if(json.containsKey("reason")){
+      bills.setReason(json.getString("reason"));
+    }
+    if(json.containsKey("status")){
+      bills.setBillStatus(json.getInteger("status"));
     }
     bills.setCreateDate(new Date());
     billsService.save(bills);
@@ -63,9 +75,27 @@ public class BillsController {
   }
 
   @PostMapping("/update")
-  public Result update(Bills bills) {
-    billsService.update(bills);
-    return ResultGenerator.genSuccessResult();
+  public Result update(@RequestBody String jsonstr, HttpSession session) {
+    JSONObject json = JSONObject.parseObject(jsonstr);
+    if(json.containsKey("billsId")){
+      Bills bills=billsService.findById(json.getInteger("billsId"));
+      if(json.containsKey("billStatus")){
+        bills.setBillStatus(json.getInteger("billStatus"));
+      }
+      if(json.containsKey("content")){
+        bills.setContent(json.getString("content"));
+      }
+      if(json.containsKey("filepath")){
+        bills.setBak(json.getString("filepath"));
+      }
+      if(json.containsKey("reason")){
+        bills.setReason(json.getString("reason"));
+      }
+      billsService.update(bills);
+      return ResultGenerator.genSuccessResult(bills);
+    }
+    return ResultGenerator.genFailResult("参数输入不正确");
+
   }
 
   @PostMapping("/detail")
@@ -74,27 +104,47 @@ public class BillsController {
     return ResultGenerator.genSuccessResult(bills);
   }
 
-  @GetMapping("/list")
-  public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,@RequestParam() String type,@RequestParam(defaultValue = "0") String year) {
+  @PostMapping("/list")
+  public Result list(@RequestBody String jsonstr, HttpSession session) {
+    JSONObject json = JSONObject.parseObject(jsonstr);
+    JSONObject res_json = new JSONObject();
+    int page=0;
+    int size=0;
+    String type="";
+    String year="";
+    if(json.containsKey("page")){
+      page=json.getInteger("page");
+    }
+    if(json.containsKey("size")){
+      size=json.getInteger("size");
+    }
     PageHelper.startPage(page, size);
+
+    if(json.containsKey("type")){
+      type=json.getString("type");
+    }
+    if(json.containsKey("year")){
+      year=json.getString("year");
+    }
     List<Bills> billsList;
-    List<BillsVO> billsVOList=new ArrayList<>();
-    if(type!=null && type!="" && year!="" && year!=null){
-      billsList= billsService.getBillsByTypes(Integer.valueOf(type),year);
-    }else{
+    List<BillsVO> billsVOList = new ArrayList<>();
+    if (type != null && type != "") {
+      billsList = billsService.getBillsByTypes(Integer.valueOf(type), year);
+    } else {
       billsList = billsService.findAll();
     }
-    for(Bills bill:billsList){
-      try{
-        BillsVO billsVO=new BillsVO();
+    for (Bills bill : billsList) {
+      try {
+        BillsVO billsVO = new BillsVO();
         billsVO.setBills(bill);
         billsVO.setUser(userService.findById(bill.getUserId()));
         billsVOList.add(billsVO);
-      }catch (Exception e){
+      } catch (Exception e) {
         System.out.println(e);
       }
     }
     PageInfo pageInfo = new PageInfo(billsVOList);
     return ResultGenerator.genSuccessResult(pageInfo);
   }
+
 }

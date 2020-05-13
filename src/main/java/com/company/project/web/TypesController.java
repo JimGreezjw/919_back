@@ -44,13 +44,18 @@ public class TypesController {
     return ResultGenerator.genSuccessResult();
   }
 
-  @PostMapping("/detail")
+  @RequestMapping("/detail")
   public Result detail(@RequestParam Integer id) {
     Types types = typesService.findById(id);
     return ResultGenerator.genSuccessResult(types);
   }
+  @RequestMapping("/listType")
+  public Result getTypeByName(@RequestParam String typeName) {
+    List<Types> typesList = typesService.findByTypeName(typeName);
+    return ResultGenerator.genSuccessResult(typesList);
+  }
 
-  @PostMapping("/list")
+  @RequestMapping("/list")
   public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
     PageHelper.startPage(page, size);
     List<Types> list = typesService.findAll();

@@ -57,24 +57,24 @@ public class UserController {
     return ResultGenerator.genSuccessResult();
   }
 
-  @PostMapping("/update/{id}")
-  public Result update(@PathVariable Integer id, @RequestBody String jsonstr) {
-    User user = userService.findById(id);
+  @PostMapping("/update")
+  public Result update(@RequestBody String jsonstr, HttpSession session) {
     JSONObject json = JSONObject.parseObject(jsonstr);
-    if (json.containsKey("userName")) {
-      user.setUsername(json.getString("userName"));
+    if(json.containsKey("id") && json.containsKey("oldPass") && json.containsKey("pass")){
+      User user=userService.findById(json.getInteger("id"));
+      if(user==null){
+        return ResultGenerator.genFailResult("未找到用户");
+      }
+      if(user.getPassword().equals(json.getString("oldPass"))){
+        user.setPassword(json.getString("pass"));
+        userService.update(user);
+        return ResultGenerator.genSuccessResult("密码修改成功!");
+      }else{
+        return ResultGenerator.genFailResult("输入用户密码错误");
+      }
+    }else{
+      return ResultGenerator.genFailResult("更改用户密码输入不完全");
     }
-    if (json.containsKey("password")) {
-      user.setPassword(json.getString("password"));
-    }
-    if (json.containsKey("nickName")) {
-      user.setNickName(json.getString("nickName"));
-    }
-    if (json.containsKey("sex")) {
-      user.setSex(json.getInteger("sex"));
-    }
-    userService.update(user);
-    return ResultGenerator.genSuccessResult();
   }
 
   @PostMapping("/detail")
